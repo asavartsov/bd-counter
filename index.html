@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+	/* Top level */
+	#bd_counter {
+		position: absolute;
+		top: 50px;
+		left: 100px;
+	}
+
+	#bd_date {
+		float: left;
+		width: 108px;
+		height: 150px;
+		background: url("i/bg_date.png") 0 0 no-repeat;
+	}
+	
+	#bd_time {
+		margin-left: 108px;
+		width: 247px;
+		height: 150px;
+		background: url("i/bg_time.png") 0 0 no-repeat;
+	}
+	
+	/* Middle level */
+	#bd_date_val {
+		position: relative;
+		top: 25px;
+		left: 17px;
+	}
+	
+	#bd_time_val {
+		position: relative;
+		top: 25px;
+		left: 22px;
+	}
+	
+	/* Deepest level */
+	#bd_time_val_h1, #bd_time_val_h2, #bd_time_val_m1,
+	#bd_time_val_m2, #bd_date_val_d1, #bd_date_val_d2 {
+		float:left;
+		height: 72px;
+		width: 36px;
+		background: url("i/bd_numbers.png") 0 0 no-repeat;
+	}
+
+	
+	#bd_time_val_colon {
+		float:left;
+		height: 72px;
+		width: 17px;
+		background: url("i/bd_colon.png") 0 0 no-repeat;
+	}
+	
+	/* Easter eggs */
+	#bd_gift {
+		visibility: hidden;
+		position: relative;
+		top: 30px;
+		left: 21px;
+		width: 66px;
+		height: 59px;
+		background: url("i/bd_gift.png") 0 0 no-repeat;
+	}
+	
+	#bd_beer {
+		/* float: left; */
+		visibility: hidden;
+		position: relative;
+		top: 25px;
+		left: 33px;
+		width: 142px;
+		height: 73px;
+		background: url("i/bd_beer.png") 0 0 no-repeat;
+	}
+</style>
+
+<script type="text/javascript">
+	var bdDate = new Date(2011, 9, 24, 18, 0);
+
+	var oneDay = 1000*60*60*24;
+	var oneHour = 1000*60*60;
+	var oneMinute = 1000*60;
+	
+	var digitHeight = 72;
+	
+	function initCounter()
+	{
+		preloadImages();
+		refreshTime();
+		setInterval("refreshTime()", 1000);
+	}
+
+	function preloadImages() {
+		beerImage = new Image();
+		giftImage = new Image();
+		numbersImage = new Image();
+
+		beerImage.src = "i/bd_beer.png";
+		giftImage.src = "i/bd_gift.png";
+		numbersImage.src = "i/bd_numbers.png";
+	}
+
+	function refreshTime()
+	{
+		date_val_d1 = document.getElementById("bd_date_val_d1");
+		date_val_d2 = document.getElementById("bd_date_val_d2");
+
+		time_val_h1 = document.getElementById("bd_time_val_h1");
+		time_val_h2 = document.getElementById("bd_time_val_h2");
+
+		time_val_m1 = document.getElementById("bd_time_val_m1");
+		time_val_m2 = document.getElementById("bd_time_val_m2");
+
+		// Get current Date/Time
+		now = new Date();
+		diff = bdDate.getTime() - now.getTime();
+
+		if(diff < 0)
+			diff = 0;
+
+		// Days
+		days = Math.floor(diff / oneDay);
+
+		days_1 = Math.floor(days / 10) % 10;
+		days_2 = days % 10;
+
+		date_val_d1.style.backgroundPosition = "0 -" + days_1*digitHeight + "px";
+		date_val_d2.style.backgroundPosition = "0 -" + days_2*digitHeight + "px";
+
+		// Hours
+		diff -= days * oneDay;
+		hours = Math.floor(diff / oneHour);
+		hour_1 = Math.floor(hours / 10) % 10;
+		hour_2 = hours % 10;
+
+		time_val_h1.style.backgroundPosition = "0 -" + hour_1*digitHeight + "px";
+		time_val_h2.style.backgroundPosition = "0 -" + hour_2*digitHeight + "px";
+		
+		
+		// Minutes
+		diff -= hours * oneHour;
+		mins = Math.ceil(diff / oneMinute); // FIXME: 60 secs
+		min_1 = Math.floor(mins / 10) % 10;
+		min_2 = mins % 10;
+
+		time_val_m1.style.backgroundPosition = "0 -" + min_1*digitHeight + "px";
+		time_val_m2.style.backgroundPosition = "0 -" + min_2*digitHeight + "px";
+		
+		blinkColon();
+	}
+	
+	function blinkColon()
+	{
+		colon = document.getElementById("bd_time_val_colon");
+		if(colon.style.visibility == "visible" || colon.style.visibility == "")
+			colon.style.visibility = "hidden";
+		else
+			colon.style.visibility = "visible";
+	}
+	
+	function showGift(show)
+	{
+		gift = document.getElementById("bd_gift");
+		date_val = document.getElementById("bd_date_val");
+		if(show)
+		{
+			date_val.style.visibility = "hidden";
+			gift.style.visibility = "visible";
+		}
+		else
+		{
+			gift.style.visibility = "hidden";
+			date_val.style.visibility = "visible";
+		}
+	}
+
+	function showBeer(show)
+	{
+		beer = document.getElementById("bd_beer");
+		time_val = document.getElementById("bd_time_val");
+		if(show)
+		{
+			time_val.style.visibility = "hidden";
+			beer.style.visibility = "visible";
+		}
+		else
+		{
+			beer.style.visibility = "hidden";
+			time_val.style.visibility = "visible";
+		}
+	}
+</script>
+
+</head>
+<body onload="initCounter();">
+	<div id="bd_counter">
+		<div id="bd_date" onmouseover="showGift(true);" onmouseout="showGift(false);">
+			<div id="bd_date_val">
+				<div id="bd_date_val_d1"></div>
+				<div id="bd_date_val_d2"></div>
+			</div>
+			<div id="bd_gift"></div>
+		</div>
+		<div id="bd_time" onmouseover="showBeer(true);" onmouseout="showBeer(false);">
+			<div id="bd_time_val">
+				<div id="bd_time_val_h1"></div>
+				<div id="bd_time_val_h2"></div>
+				<div id="bd_time_val_colon"></div>
+				<div id="bd_time_val_m1"></div>
+				<div id="bd_time_val_m2"></div>
+			</div>
+			<div id="bd_beer"></div>
+		</div>
+	</div>
+</body>
+</html>
